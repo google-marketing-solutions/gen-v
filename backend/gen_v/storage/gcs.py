@@ -195,4 +195,7 @@ def create_gcs_folders_in_subfolder(
 
   if not blob.exists():  # Check if folder already exists
     blob.upload_from_string('')  # Create folder if it doesn't exist
-    print(f"Folder '{folder_name}' created within subfolder '{subfolder_name}' in bucket '{bucket_name}'.")
+    print(
+      f"Folder '{folder_name}' created within subfolder "
+      f"'{subfolder_name}' in bucket '{bucket_name}'."
+    )
