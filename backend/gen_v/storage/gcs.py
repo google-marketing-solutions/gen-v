@@ -176,21 +176,21 @@ def get_path_from_gcs_url(gcs_uri: str) -> str:
 
 
 def create_gcs_folders_in_subfolder(bucket_name, subfolder_name, folder_names):
-    """Creates folders within a subfolder in a Google Cloud Storage bucket.
-    Skips folder creation if the folder already exists.
+  """Creates folders within a subfolder in a Google Cloud Storage bucket.
+  Skips folder creation if the folder already exists.
+  
+  Args:
+      bucket_name: The name of the bucket.
+      subfolder_name: The name of the subfolder.
+      folder_names: A list of folder names to create within the subfolder.
+  """
+  storage_client = storage.Client()
+  bucket = storage_client.bucket(bucket_name)
+  
+  for folder_name in folder_names:
+      folder_path = f"{subfolder_name}/{folder_name}/"
+      blob = bucket.blob(folder_path)
 
-    Args:
-        bucket_name: The name of the bucket.
-        subfolder_name: The name of the subfolder.
-        folder_names: A list of folder names to create within the subfolder.
-    """
-    storage_client = storage.Client()
-    bucket = storage_client.bucket(bucket_name)
-
-    for folder_name in folder_names:
-        folder_path = f"{subfolder_name}/{folder_name}/"
-        blob = bucket.blob(folder_path)
-
-        if not blob.exists():  # Check if folder already exists
-            blob.upload_from_string('')  # Create folder if it doesn't exist
-            print(f"Folder '{folder_name}' created within subfolder '{subfolder_name}' in bucket '{bucket_name}'.")
+  if not blob.exists():  # Check if folder already exists
+      blob.upload_from_string('')  # Create folder if it doesn't exist
+      print(f"Folder '{folder_name}' created within subfolder '{subfolder_name}' in bucket '{bucket_name}'.")
