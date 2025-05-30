@@ -22,6 +22,8 @@ from typing import Literal
 import pydantic
 import pydantic_settings
 
+from gen_v import utils
+
 
 class AppSettings(pydantic_settings.BaseSettings):
   """The settings used in the application.
@@ -86,13 +88,29 @@ class AppSettings(pydantic_settings.BaseSettings):
 
   @pydantic.computed_field(return_type=str)
   @property
-  def input_images_bucket_path(self) -> str:
-    """Relative path within the bucket for input images."""
-    return f"{self.gcs_folder_name}/input-images/"
+  def images_uri(self) -> str:
+    """Returns the GCS URI for input images."""
+    return (
+        f"{self.gcp_bucket_name}/{self.gcs_folder_name}/"
+        f"input-images/{utils.get_current_week_year_str()}"
+    )
+
+  @pydantic.computed_field(return_type=str)
+  @property
+  def intros_outros_uri(self) -> str:
+    """Returns the GCS URI for intros and outros."""
+    return f"{self.gcp_bucket_name}/{self.gcs_folder_name}/input-videos/"
+
+  @pydantic.computed_field(return_type=str)
+  @property
+  def audio_uri(self) -> str:
+    """Returns the GCS URI for audio files."""
+    return f"{self.gcp_bucket_name}/{self.gcs_folder_name}/audio/"
 
   @pydantic.computed_field(return_type=str)
   @property
   def video_model_uri(self) -> str:
+    """Returns the video model URI."""
     return (
         f"https://{self.gcp_region}-aiplatform.googleapis.com/v1/"
         f"projects/{self.gcp_project_id}/locations/{self.gcp_region}/"
@@ -102,11 +120,13 @@ class AppSettings(pydantic_settings.BaseSettings):
   @pydantic.computed_field(return_type=str)
   @property
   def prediction_endpoint(self) -> str:
+    """Returns the prediction endpoint for the video model."""
     return f"{self.video_model_uri}:predictLongRunning"
 
   @pydantic.computed_field(return_type=str)
   @property
   def fetch_endpoint(self) -> str:
+    """Returns the fetch endpoint for the video model."""
     return f"{self.video_model_uri}:fetchPredictOperation"
 
   @pydantic.computed_field(return_type=str)

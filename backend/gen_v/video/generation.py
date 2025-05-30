@@ -371,7 +371,6 @@ def generate_videos_concurrently(
 
 
 def generate_videos(
-    images_uri: str,
     output_uri_path: str,
     resized_image_width: int,
     resized_image_height: int,
@@ -387,7 +386,6 @@ def generate_videos(
   3. Generates videos (VEOs) from the recolored images.
 
   Args:
-      images_uri: The GCS URI of the folder containing the input images.
       output_uri_path: The GCS URI of the folder where output will be stored.
       resized_image_width: The desired width of the resized images.
       resized_image_height: The desired height of the resized images.
@@ -400,7 +398,7 @@ def generate_videos(
       A list of dictionaries with information about a selected video.
   """
   selected_products = utils.process_and_resize_images(
-      images_uri,
+      settings.images_uri,
       resized_image_width,
       resized_image_height,
       original_background_color,
